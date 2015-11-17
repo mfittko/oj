@@ -2386,6 +2386,27 @@ oj_write_leaf_to_file(Leaf leaf, const char *path, Options copts) {
 
 static void
 key_check(StrWriter sw, const char *key) {
+    char c=0;
+    int i;
+    int j = 0;
+    int len = strlen(key);
+    char underscore_key[len+10];
+    for (i = 0; i < len+1; i++){
+        c = key[i];
+        if(i<len){
+            if(c < 'a')
+                underscore_key[j] = (c + 32);
+            else
+                underscore_key[j] = c;
+            if(i < len-1 && key[i+1] < 'a' && i > 0){
+                j++;
+                underscore_key[j] = '_';
+            }
+            j++;
+        }else
+            underscore_key[j] = '\0';
+    }
+    key = underscore_key;
     DumpType	type = sw->types[sw->depth];
 
     if (0 == key && (ObjectNew == type || ObjectType == type)) {
@@ -2424,25 +2445,8 @@ maybe_comma(StrWriter sw) {
 
 void
 oj_str_writer_push_key(StrWriter sw, const char *key) {
-    DumpType	type = sw->types[sw->depth];
-    long	size;
-
-    if (sw->keyWritten) {
-	rb_raise(rb_eStandardError, "Can not push more than one key before pushing a non-key.");
-    }
-    if (ObjectNew != type && ObjectType != type) {
-	rb_raise(rb_eStandardError, "Can only push a key onto an Object.");
-    }
-    size = sw->depth * sw->out.indent + 3;
-    if (sw->out.end - sw->out.cur <= (long)size) {
-	grow(&sw->out, size);
-    }
-    maybe_comma(sw);
-    if (0 < sw->depth) {
-	fill_indent(&sw->out, sw->depth);
-    }
-	char c=0;
-	int i;
+    char c=0;
+    int i;
     int j = 0;
     int len = strlen(key);
     char underscore_key[len+10];
@@ -2461,13 +2465,52 @@ oj_str_writer_push_key(StrWriter sw, const char *key) {
         }else
             underscore_key[j] = '\0';
     }
-    dump_cstr(underscore_key, strlen(key), 0, 0, &sw->out);
+    key = underscore_key;
+    DumpType	type = sw->types[sw->depth];
+    long	size;
+
+    if (sw->keyWritten) {
+	rb_raise(rb_eStandardError, "Can not push more than one key before pushing a non-key.");
+    }
+    if (ObjectNew != type && ObjectType != type) {
+	rb_raise(rb_eStandardError, "Can only push a key onto an Object.");
+    }
+    size = sw->depth * sw->out.indent + 3;
+    if (sw->out.end - sw->out.cur <= (long)size) {
+	grow(&sw->out, size);
+    }
+    maybe_comma(sw);
+    if (0 < sw->depth) {
+	fill_indent(&sw->out, sw->depth);
+    }
+    dump_cstr(key, strlen(key), 0, 0, &sw->out);
     *sw->out.cur++ = ':';
     sw->keyWritten = 1;
 }
 
 void
 oj_str_writer_push_object(StrWriter sw, const char *key) {
+    char c=0;
+    int i;
+    int j = 0;
+    int len = strlen(key);
+    char underscore_key[len+10];
+    for (i = 0; i < len+1; i++){
+        c = key[i];
+        if(i<len){
+            if(c < 'a')
+                underscore_key[j] = (c + 32);
+            else
+                underscore_key[j] = c;
+            if(i < len-1 && key[i+1] < 'a' && i > 0){
+                j++;
+                underscore_key[j] = '_';
+            }
+            j++;
+        }else
+            underscore_key[j] = '\0';
+    }
+    key = underscore_key;
     if (sw->keyWritten) {
 	sw->keyWritten = 0;
 	if (sw->out.end - sw->out.cur <= 1) {
@@ -2496,6 +2539,27 @@ oj_str_writer_push_object(StrWriter sw, const char *key) {
 
 void
 oj_str_writer_push_array(StrWriter sw, const char *key) {
+    char c=0;
+    int i;
+    int j = 0;
+    int len = strlen(key);
+    char underscore_key[len+10];
+    for (i = 0; i < len+1; i++){
+        c = key[i];
+        if(i<len){
+            if(c < 'a')
+                underscore_key[j] = (c + 32);
+            else
+                underscore_key[j] = c;
+            if(i < len-1 && key[i+1] < 'a' && i > 0){
+                j++;
+                underscore_key[j] = '_';
+            }
+            j++;
+        }else
+            underscore_key[j] = '\0';
+    }
+    key = underscore_key;
     if (sw->keyWritten) {
 	sw->keyWritten = 0;
 	if (sw->out.end - sw->out.cur <= 1) {
@@ -2524,6 +2588,27 @@ oj_str_writer_push_array(StrWriter sw, const char *key) {
 
 void
 oj_str_writer_push_value(StrWriter sw, VALUE val, const char *key) {
+    char c=0;
+    int i;
+    int j = 0;
+    int len = strlen(key);
+    char underscore_key[len+10];
+    for (i = 0; i < len+1; i++){
+        c = key[i];
+        if(i<len){
+            if(c < 'a')
+                underscore_key[j] = (c + 32);
+            else
+                underscore_key[j] = c;
+            if(i < len-1 && key[i+1] < 'a' && i > 0){
+                j++;
+                underscore_key[j] = '_';
+            }
+            j++;
+        }else
+            underscore_key[j] = '\0';
+    }
+    key = underscore_key;
     if (sw->keyWritten) {
 	sw->keyWritten = 0;
     } else {
@@ -2548,6 +2633,27 @@ oj_str_writer_push_value(StrWriter sw, VALUE val, const char *key) {
 
 void
 oj_str_writer_push_json(StrWriter sw, const char *json, const char *key) {
+    char c=0;
+    int i;
+    int j = 0;
+    int len = strlen(key);
+    char underscore_key[len+10];
+    for (i = 0; i < len+1; i++){
+        c = key[i];
+        if(i<len){
+            if(c < 'a')
+                underscore_key[j] = (c + 32);
+            else
+                underscore_key[j] = c;
+            if(i < len-1 && key[i+1] < 'a' && i > 0){
+                j++;
+                underscore_key[j] = '_';
+            }
+            j++;
+        }else
+            underscore_key[j] = '\0';
+    }
+    key = underscore_key;
     if (sw->keyWritten) {
 	sw->keyWritten = 0;
     } else {
