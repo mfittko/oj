@@ -2441,7 +2441,27 @@ oj_str_writer_push_key(StrWriter sw, const char *key) {
     if (0 < sw->depth) {
 	fill_indent(&sw->out, sw->depth);
     }
-    dump_cstr(key, strlen(key), 0, 0, &sw->out);
+	char c=0;
+	int i;
+    int j = 0;
+    int len = strlen(key);
+    char underscore_key[len+10];
+    for (i = 0; i < len+1; i++){
+        c = key[i];
+        if(i<len){
+            if(c < 'a')
+                underscore_key[j] = (c + 32);
+            else
+                underscore_key[j] = c;
+            if(i < len-1 && key[i+1] < 'a' && i > 0){
+                j++;
+                underscore_key[j] = '_';
+            }
+            j++;
+        }else
+            underscore_key[j] = '\0';
+    }
+    dump_cstr(underscore_key, strlen(key), 0, 0, &sw->out);
     *sw->out.cur++ = ':';
     sw->keyWritten = 1;
 }
